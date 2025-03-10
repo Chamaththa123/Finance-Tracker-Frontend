@@ -5,6 +5,8 @@ import { MainLayout } from "../components/layouts/MainLayout";
 import { Login } from "../pages/Login";
 import { SignUp } from "../pages/SignUp";
 import { GuestLayout } from "../components/layouts/GuestLayout";
+import Budget from "../pages/budget/Budget";
+import AddBudget from "../pages/budget/AddBudget";
 
 
 const router = createBrowserRouter([
@@ -16,7 +18,14 @@ const router = createBrowserRouter([
         path: "/",
         element: <Dashboard />,
       },
-     
+      {
+        path: "/budget",
+        element: <Budget />,
+      },
+      {
+        path: "/budget/add",
+        element: <AddBudget />,
+      },
     ],
   },
   {

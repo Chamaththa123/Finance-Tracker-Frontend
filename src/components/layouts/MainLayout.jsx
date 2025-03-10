@@ -13,13 +13,12 @@ export const MainLayout = () => {
   const sideBardownRef = useRef(null);
   const sideBarButtondownRef = useRef(null);
 
-
   const { token, setUser, setToken, user } = useStateContext();
   const handleLogout = () => {
     setUser(null);
     setToken(null);
   };
-  
+
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
@@ -72,18 +71,18 @@ export const MainLayout = () => {
   };
 
   return (
-    <section className="bg-blue-gray-50 w-full min-h-screen flex">
+    <section className="flex min-h-screen w-full">
       <div ref={sideBardownRef} className="">
         <SideBar handleSidebar={handleSidebar} sidebar={sidebar} />
       </div>
 
-      <section className="w-[100%] md:w-[85%] flex flex-col gap-5 md:ml-[15%]">
-        <Card className="h-16 rounded-none w-full p-3 pl-3 flex flex-row justify-between items-center bg-gray-100">
+      <section className="flex w-[100%] flex-col gap-5 md:ml-[15%] md:w-[85%]">
+        <Card className="flex h-16 w-full flex-row items-center justify-between rounded-none bg-white p-3 pl-3">
           <div>
             <div ref={sideBarButtondownRef} className="flex md:hidden">
               <Tooltip content="Sidebar">
                 <div onClick={handleSidebar}>
-                  <IconButton variant="text" className="bg-gray-500 mx-2">
+                  <IconButton variant="text" className="mx-2 bg-gray-500">
                     <Burger className="h-4 w-4 text-white" />
                   </IconButton>
                 </div>
@@ -92,9 +91,9 @@ export const MainLayout = () => {
           </div>
           <div>
             <div className="flex items-center justify-between">
-                            <Tooltip content="View Notifications">
+              <Tooltip content="View Notifications">
                 <Link to="/notifications">
-                  <IconButton variant="text" className="bg-gray-500 mx-2">
+                  <IconButton variant="text" className="mx-2 bg-gray-500">
                     <BellIcon className="h-4 w-4 text-white" />
                   </IconButton>
                 </Link>
@@ -102,28 +101,28 @@ export const MainLayout = () => {
               <div className="relative" ref={dropdownRef}>
                 <IconButton
                   variant="text"
-                  className="bg-gray-500 mx-2 rounded-full"
+                  className="mx-2 rounded-full bg-gray-500"
                   onClick={handleUserIconClick}
                 >
                   <UserIcon className="h-4 w-4 text-white" />
                 </IconButton>
 
                 {signOutVisible && (
-                  <div className="absolute top-12 right-5 bg-white w-[150px] flex flex-col items-start p-3 z-10 shadow-md border-[1px] border-grey-800">
+                  <div className="border-grey-800 absolute right-5 top-12 z-10 flex w-[150px] flex-col items-start border-[1px] bg-white p-3 shadow-md">
                     {user.Account === 1 && (
                       <Link
                         to="/account"
                         className="w-full"
                         onClick={() => setSignOutVisible(!signOutVisible)}
                       >
-                        <div className="w-full font-inter border-b-2 py-2 cursor-pointer">
+                        <div className="w-full cursor-pointer border-b-2 py-2 font-inter">
                           My Account
                         </div>
                       </Link>
                     )}
 
                     <div className="w-full" onClick={handleLogout}>
-                      <div className="font-inter py-2 cursor-pointer">
+                      <div className="cursor-pointer py-2 font-inter">
                         Sign Out
                       </div>
                     </div>
@@ -133,7 +132,9 @@ export const MainLayout = () => {
             </div>
           </div>
         </Card>
-        <Outlet />
+        <div className="px-[3%]">
+          <Outlet />
+        </div>
       </section>
     </section>
   );
