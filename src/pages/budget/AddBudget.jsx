@@ -102,7 +102,7 @@ const AddBudget = ({ isOpen, onClose, fetchBudget }) => {
     setErrors({});
     onClose();
   };
-  
+
   return (
     <Dialog
       size="xs"
@@ -125,7 +125,9 @@ const AddBudget = ({ isOpen, onClose, fetchBudget }) => {
       <DialogBody className="p-5">
         <div className="flex flex-col p-4 text-gray-800">
           <div className="mb-4">
-            <label className="mb-1 block font-semibold text-[15px]">Budget Name:</label>
+            <label className="mb-1 block text-[15px] font-semibold">
+              Budget Name:
+            </label>
             <div className="flex gap-4">
               <input
                 type="text"
@@ -160,7 +162,9 @@ const AddBudget = ({ isOpen, onClose, fetchBudget }) => {
           </div>
 
           <div className="mb-4">
-            <label className="mb-1 block font-semibold text-[15px]">Price:</label>
+            <label className="mb-1 block text-[15px] font-semibold">
+              Price:
+            </label>
             <div className="flex gap-4">
               <input
                 type="text"
@@ -195,9 +199,9 @@ const AddBudget = ({ isOpen, onClose, fetchBudget }) => {
 
           <button
             onClick={handleSubmit}
-            className="mt-4 w-[130px] rounded-full bg-green-500 px-4 py-[5px] text-white font-semibold text-[15px]"
+            className="mt-4 w-[130px] rounded-full bg-[#25C935] px-4 py-[5px] text-[15px] font-semibold text-white"
           >
-           Add Budget
+            Add Budget
           </button>
         </div>
       </DialogBody>

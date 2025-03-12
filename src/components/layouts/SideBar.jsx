@@ -118,7 +118,6 @@ const NavItem = ({
         </ListItem>
       </Link>
 
-      {/* Render children recursively if they exist */}
       {openChildren && Array.isArray(children) && children.length > 0 && (
         <ul className="ml-4 border-l-2 border-[#10806f]">
           {children.map((child, index) => (
