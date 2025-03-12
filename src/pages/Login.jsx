@@ -118,7 +118,7 @@ export const Login = () => {
           </CardBody>
           <CardFooter className="pt-0">
             <>
-              <Button type="submit" className="bg-[#179113]" fullWidth>
+              <Button type="submit" className="bg-[#25C935]" fullWidth>
                 Sign In
               </Button>
             </>

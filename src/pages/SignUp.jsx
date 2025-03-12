@@ -149,7 +149,7 @@ export const SignUp = () => {
         </CardBody>
 
         <CardFooter className="pt-0">
-          <Button className="bg-[#179113]" fullWidth onClick={handleSubmit}>
+          <Button className="bg-[#25C935]" fullWidth onClick={handleSubmit}>
             Sign Up
           </Button>
 
