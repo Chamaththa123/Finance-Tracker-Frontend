@@ -100,7 +100,7 @@ const NavItem = ({
       <Link to={`${link !== "#" ? link : "#"}`}>
         <ListItem
           onClick={toggleChildren}
-          className={` ${user[priv_name] === 0 ? "hidden" : ""} ${currentUrl === link ? "bg-[#10806f] text-white" : "text-white"} w-full rounded-sm text-[14px] font-bold hover:bg-[#10806f] hover:text-white focus:bg-[#10806f] focus:text-white active:bg-[#10806f]`}
+          className={` ${user[priv_name] === 0 ? "hidden" : ""} ${currentUrl === link ? "bg-[#25C935] text-white" : "text-white"} w-full rounded-sm text-[14px] font-bold hover:bg-[#25C935] hover:text-white focus:bg-[#25C935] focus:text-white active:bg-[#25C935]`}
         >
           <ListItemPrefix>
             <NavIcon className="h-5 w-5" />

@@ -1,150 +1,208 @@
-import React, { useState, useEffect ,useRef} from "react";
-import {
-  CloseIcon,
-} from "../../utils/icons";
+import React, { useState, useEffect, useRef } from "react";
+import { CloseIcon, StartIcon, StopIcon } from "../../utils/icons";
 import { Dialog, DialogHeader, DialogBody } from "@material-tailwind/react";
 import axiosClient from "../../../axios-client";
 import { useStateContext } from "../../contexts/NavigationContext";
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
-const AddBudget = ({ isOpen, onClose }) => {
-   const { user } = useStateContext();
+const AddBudget = ({ isOpen, onClose, fetchBudget }) => {
+  const { user } = useStateContext();
 
-   const userId= user.id;
-   const [budgetName, setBudgetName] = useState("");
-     const [price, setPrice] = useState("");
-     const [isListening, setIsListening] = useState(false);
-     const [step, setStep] = useState(1);
-     const [status, setStatus] = useState("");
-     const recognitionRef = useRef(null);
-   
-     useEffect(() => {
-       if ("webkitSpeechRecognition" in window) {
-         recognitionRef.current = new window.webkitSpeechRecognition();
-         recognitionRef.current.continuous = false;
-         recognitionRef.current.interimResults = false;
-         recognitionRef.current.lang = "en-US";
-   
-         recognitionRef.current.onstart = () => {
-           setStatus("Listening...");
-         };
-   
-         recognitionRef.current.onresult = (event) => {
-           const result = event.results[0][0].transcript.trim();
-           console.log("Recognized:", result);
-   
-           if (step === 1) {
-            setBudgetName(result);
-             setStatus("Processing...");
-             setStep(2);
-             speak("Now say the price.");
-   
-             setTimeout(() => {
-               setStatus("Waiting for price...");
-               recognitionRef.current.start(); // Restart after 6 seconds
-             }, 1000);
-           } else if (step === 2) {
-             setPrice(result);
-             setStatus("Processing...");
-             setStep(3);
-             speak("Do you want to save it? Say yes to confirm.");
-   
-             setTimeout(() => {
-               setStatus("Waiting for confirmation...");
-               recognitionRef.current.start();
-             }, 1000);
-           } else if (step === 3) {
-             if (result.toLowerCase().includes("yes")) {
-               saveExpense();
-             }
-             setIsListening(false);
-             setStatus("Process completed.");
-           }
-         };
-   
-         recognitionRef.current.onend = () => {
-           console.log("Recognition ended");
-         };
-       }
-     }, [step, isListening]);
-   
-     const startListening = () => {
-       if (!recognitionRef.current) return;
-   
-       setIsListening(true);
-       setStep(1);
-       setStatus("Say the expense name.");
-       speak(" Say the expense name.");
-       recognitionRef.current.start();
-     };
-   
-     const speak = (message) => {
-       const speech = new SpeechSynthesisUtterance(message);
-       window.speechSynthesis.speak(speech);
-     };
-   
-     const saveExpense = async () => {
-       try {
-         setStatus("Saving expense...");
-         const response = await fetch("/budget", {
-           method: "POST",
-           headers: { "Content-Type": "application/json" },
-           body: JSON.stringify({ budgetName, price,userId }),
-         });
-         console.log("Expense saved:", await response.json());
-         setStatus("Expense saved successfully.");
-       } catch (error) {
-         console.error("Error saving expense:", error);
-         setStatus("Error saving expense.");
-       }
-     };
+  const userId = user.id;
+  const [formData, setFormData] = useState({
+    budgetName: "",
+    price: "",
+    userId: userId,
+  });
+  const [isListening, setIsListening] = useState({
+    budgetName: false,
+    price: false,
+  });
+  const [errors, setErrors] = useState({});
+  const recognitionRef = useRef(null);
+  const activeFieldRef = useRef(null);
+
+  if (!recognitionRef.current && "webkitSpeechRecognition" in window) {
+    recognitionRef.current = new window.webkitSpeechRecognition();
+    recognitionRef.current.continuous = true;
+    recognitionRef.current.interimResults = true;
+    recognitionRef.current.lang = "en-US";
+  }
+
+  const startListening = (field) => {
+    if (recognitionRef.current && !activeFieldRef.current) {
+      activeFieldRef.current = field; // Lock active field
+      setIsListening((prev) => ({ ...prev, [field]: true }));
+      recognitionRef.current.start();
+      recognitionRef.current.onresult = (event) => {
+        let transcript = "";
+        for (let i = 0; i < event.results.length; i++) {
+          transcript += event.results[i][0].transcript;
+        }
+        setFormData((prev) => ({ ...prev, [field]: transcript }));
+      };
+      recognitionRef.current.onerror = (event) => {
+        console.error("Speech recognition error:", event.error);
+        stopListening(field);
+      };
+    }
+  };
+
+  const stopListening = (field) => {
+    if (recognitionRef.current && activeFieldRef.current === field) {
+      setIsListening((prev) => ({ ...prev, [field]: false }));
+      recognitionRef.current.stop();
+      activeFieldRef.current = null; // Unlock field
+    }
+  };
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
+    setErrors((prev) => ({
+      ...prev,
+      [name]: "",
+    }));
+  };
+
+  const handleSubmit = async () => {
+    const newErrors = {};
+
+    if (!formData.budgetName.trim()) {
+      newErrors.budgetName = "Budget Name is required";
+    }
+
+    if (!formData.price.trim()) {
+      newErrors.price = "Price is required";
+    } else if (isNaN(formData.price) || Number(formData.price) <= 0) {
+      newErrors.price = "Enter a valid price";
+    }
+
+    if (Object.keys(newErrors).length > 0) {
+      setErrors(newErrors);
+      return;
+    }
+
+    try {
+      await axiosClient.post("/budget", formData);
+      toast.success("Budget added successfully!");
+      setFormData({ budgetName: "", price: "", userId: userId });
+      fetchBudget();
+      handleClose();
+    } catch (error) {
+      console.error("Error saving data:", error);
+      toast.error("Failed to add budget. Please try again.");
+    }
+  };
+  const handleClose = () => {
+    setFormData({ budgetName: "", price: "", userId: userId });
+    setErrors({});
+    onClose();
+  };
+  
   return (
     <Dialog
-      size="sm"
+      size="xs"
       open={isOpen}
-      handler={onClose}
-      className="bg-white shadow-none rounded-[10px] overflow-scroll scrollbar-hide font-inter"
+      handler={handleClose}
+      className="overflow-scroll rounded-[10px] bg-white font-inter shadow-none scrollbar-hide"
     >
-      <DialogHeader className="flex justify-between align-center border-b border-[#ececec] pb-3">
-        <div className="flex align-center">
+      <DialogHeader className="align-center flex justify-between border-b border-[#ececec] pb-3">
+        <div className="align-center flex">
           <div>
             <p className="font-poppins text-[18px] font-semibold leading-[28px] text-[#000000]">
-             Add New Budget
+              Add New Budget
             </p>
           </div>
         </div>
-        <div onClick={onClose} className="cursor-pointer">
+        <div onClick={handleClose} className="cursor-pointer">
           <CloseIcon />
         </div>
       </DialogHeader>
       <DialogBody className="p-5">
-      <div className="p-4 flex flex-col items-center">
-      <h2 className="text-xl font-bold mb-4">Voice Expense Tracker</h2>
-      <input
-        type="text"
-        className="w-96 p-2 border rounded mb-2"
-        placeholder="Expense Name"
-        value={name}
-        readOnly
-      />
-      <input
-        type="text"
-        className="w-96 p-2 border rounded mb-2"
-        placeholder="Price"
-        value={price}
-        readOnly
-      />
-      <button
-        onClick={startListening}
-        className="px-4 py-2 bg-blue-500 text-white rounded mr-2"
-        disabled={isListening}
-      >
-        Use Voice Command
-      </button>
-      {status && <p className="mt-4 text-gray-600">{status}</p>}
-    </div>
+        <div className="flex flex-col p-4 text-gray-800">
+          <div className="mb-4">
+            <label className="mb-1 block font-semibold text-[15px]">Budget Name:</label>
+            <div className="flex gap-4">
+              <input
+                type="text"
+                name="budgetName"
+                value={formData.budgetName}
+                onChange={handleChange}
+                className="w-[80%] rounded border p-2"
+              />
+
+              <div>
+                {!isListening.budgetName ? (
+                  <button
+                    onClick={() => startListening("budgetName")}
+                    className="ml-2 rounded-full bg-blue-500 px-2 py-2 text-white"
+                    disabled={activeFieldRef.current}
+                  >
+                    <StartIcon />
+                  </button>
+                ) : (
+                  <button
+                    onClick={() => stopListening("budgetName")}
+                    className="ml-2 rounded-full bg-red-500 px-2 py-2 text-white"
+                  >
+                    <StopIcon />
+                  </button>
+                )}
+              </div>
+            </div>
+            {errors.budgetName && (
+              <p className="text-sm text-red-500">{errors.budgetName}</p>
+            )}
+          </div>
+
+          <div className="mb-4">
+            <label className="mb-1 block font-semibold text-[15px]">Price:</label>
+            <div className="flex gap-4">
+              <input
+                type="text"
+                name="price"
+                value={formData.price}
+                onChange={handleChange}
+                className="w-[80%] rounded border p-2"
+              />
+              <div>
+                {!isListening.price ? (
+                  <button
+                    onClick={() => startListening("price")}
+                    className="ml-2 rounded-full bg-blue-500 px-2 py-2 text-white"
+                    disabled={activeFieldRef.current}
+                  >
+                    <StartIcon />
+                  </button>
+                ) : (
+                  <button
+                    onClick={() => stopListening("price")}
+                    className="ml-2 rounded-full bg-red-500 px-2 py-2 text-white"
+                  >
+                    <StopIcon />
+                  </button>
+                )}
+              </div>
+            </div>
+            {errors.price && (
+              <p className="text-sm text-red-500">{errors.price}</p>
+            )}
+          </div>
+
+          <button
+            onClick={handleSubmit}
+            className="mt-4 w-[130px] rounded-full bg-green-500 px-4 py-[5px] text-white font-semibold text-[15px]"
+          >
+           Add Budget
+          </button>
+        </div>
       </DialogBody>
     </Dialog>
-  )
-}
+  );
+};
 
-export default AddBudget
+export default AddBudget;

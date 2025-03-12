@@ -20,30 +20,7 @@ axiosClient.interceptors.request.use((config) => {
 axiosClient.interceptors.response.use(
   (response) => {
     return response;
-  },
-  (error) => {
-    try {
-      const { response } = error;
-      if (response.status === 401) {
-        Cookies.remove("_auth");
-        localStorage.setItem(
-          "TOKEN_EXPIRE",
-          "Your login has expired. Please log in again to continue.",
-        );
-        // Redirect to login page or perform any other action, like logging the user out
-        let baseURL = window.location.origin;
-        let fullPath = window.location.href;
-        let pathAfterBaseURL = fullPath.substring(baseURL.length);
-        if (pathAfterBaseURL !== "/login") {
-          window.location.href = "/login";
-        }
-      }
-    } catch (error) {
-      console.error(error);
-    }
-
-    throw error;
-  },
+  }
 );
 
 export default axiosClient;
