@@ -32,7 +32,7 @@ const AddBudget = ({ isOpen, onClose, fetchBudget }) => {
 
   const startListening = (field) => {
     if (recognitionRef.current && !activeFieldRef.current) {
-      activeFieldRef.current = field; // Lock active field
+      activeFieldRef.current = field;
       setIsListening((prev) => ({ ...prev, [field]: true }));
       recognitionRef.current.start();
       recognitionRef.current.onresult = (event) => {
@@ -199,7 +199,7 @@ const AddBudget = ({ isOpen, onClose, fetchBudget }) => {
 
           <button
             onClick={handleSubmit}
-            className="mt-4 w-[130px] rounded-full bg-[#25C935] px-4 py-[5px] text-[15px] font-semibold text-white"
+            className="mt-4 w-[130px] rounded-md bg-[#25C935] px-4 py-[6px] text-[15px] font-semibold text-white"
           >
             Add Budget
           </button>

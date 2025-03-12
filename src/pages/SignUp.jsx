@@ -87,12 +87,12 @@ export const SignUp = () => {
   };
 
   return (
-    <div className="flex justify-center items-center h-screen">
+    <div className="flex h-screen items-center justify-center">
       <Card className="w-96 rounded-none">
-        <div className="w-full bg-black h-14 text-white text-[20px] flex justify-center items-center font-bold">
+        <div className="flex h-14 w-full items-center justify-center bg-black text-[20px] font-bold text-white">
           Create New Account
         </div>
-        <CardBody className="flex flex-col gap-5 mt-4">
+        <CardBody className="mt-4 flex flex-col gap-5">
           <div>
             <Input
               required
@@ -105,7 +105,7 @@ export const SignUp = () => {
               onChange={handleChange}
             />
             {formErrors.name && (
-              <Typography variant="small" className="text-red-500 text-xs mt-1">
+              <Typography variant="small" className="mt-1 text-xs text-red-500">
                 {formErrors.name}
               </Typography>
             )}
@@ -123,7 +123,7 @@ export const SignUp = () => {
               onChange={handleChange}
             />
             {formErrors.email && (
-              <Typography variant="small" className="text-red-500 text-xs mt-1">
+              <Typography variant="small" className="mt-1 text-xs text-red-500">
                 {formErrors.email}
               </Typography>
             )}
@@ -141,7 +141,7 @@ export const SignUp = () => {
               onChange={handleChange}
             />
             {formErrors.password && (
-              <Typography variant="small" className="text-red-500 text-xs mt-1">
+              <Typography variant="small" className="mt-1 text-xs text-red-500">
                 {formErrors.password}
               </Typography>
             )}
