@@ -81,6 +81,9 @@ const Budget = () => {
     }
   };
 
+  const totalBudget = budget.reduce((sum, item) => sum + item.price, 0);
+
+
   return (
     <>
       <div className="flex justify-between">
@@ -106,10 +109,15 @@ const Budget = () => {
           </div>
         </div>
       </div>
-
+      <div className="flex my-10">
+        <div className="h-auto w-[200px] rounded-lg border-2 border-gray-300 p-4">
+          <div className="font-extrabold uppercase">Rs.{totalBudget.toFixed(2)}</div>
+          <div className="font-bold uppercase text-gray-600 text-[14px]">Total Budget</div>
+        </div>
+      </div>
       <div className="relative mt-10 overflow-x-auto">
         <table className="w-full text-left text-sm text-gray-500 dark:text-gray-400 rtl:text-right">
-          <thead className="bg-gray-100 text-xs uppercase text-gray-700">
+          <thead className="bg-gray-100 text-xs uppercase text-gray-700 font-extrabold">
             <tr>
               <th scope="col" className="px-6 py-3">
                 Name
