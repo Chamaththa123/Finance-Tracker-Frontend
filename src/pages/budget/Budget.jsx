@@ -5,11 +5,14 @@ import "react-toastify/dist/ReactToastify.css";
 import axiosClient from "../../../axios-client";
 import { useStateContext } from "../../contexts/NavigationContext";
 import Swal from "sweetalert2";
+import EditBudget from "./EditBudget";
 
 const Budget = () => {
   const { user } = useStateContext();
   const userId = user.id;
   const [openModal, setOpenModal] = useState(false);
+  const [openEditModal, setOpenEditModal] = useState(false);
+  const [selectedBudgetId, setSelectedBudgetId] = useState(null);
   const [budget, setBudget] = useState([]);
   const [searchQuery, setSearchQuery] = useState("");
   const [filteredBudget, setFilteredBudget] = useState([]);
@@ -32,8 +35,14 @@ const Budget = () => {
     setOpenModal(true);
   };
 
+  const handleEditModalOpenClick = (budgetId) => {
+    setOpenEditModal(true);
+    setSelectedBudgetId(budgetId);
+  };
+
   const handleModalClose = () => {
     setOpenModal(false);
+    setOpenEditModal(false);
   };
 
   const handleSearchChange = (event) => {
@@ -139,7 +148,7 @@ const Budget = () => {
                   </td>
                   <td className="flex gap-4 px-6 py-4">
                     <button
-                      onClick={() => handleDelete(item._id)}
+                      onClick={() => handleEditModalOpenClick(item._id)}
                       className="rounded-md bg-black px-2 py-1 font-medium text-white"
                     >
                       Edit
@@ -168,6 +177,12 @@ const Budget = () => {
         isOpen={openModal}
         onClose={handleModalClose}
         fetchBudget={fetchBudget}
+      />
+      <EditBudget
+        isOpen={openEditModal}
+        onClose={handleModalClose}
+        fetchBudget={fetchBudget}
+        selectedBudgetId={selectedBudgetId}
       />
       <ToastContainer />
     </>
