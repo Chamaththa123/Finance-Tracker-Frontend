@@ -7,6 +7,8 @@ import { SignUp } from "../pages/SignUp";
 import { GuestLayout } from "../components/layouts/GuestLayout";
 import Budget from "../pages/budget/Budget";
 import AddBudget from "../pages/budget/AddBudget";
+import Goal from "../pages/goal/Goal";
+import AddGoal from "../pages/goal/AddGoal";
 
 
 const router = createBrowserRouter([
@@ -25,6 +27,14 @@ const router = createBrowserRouter([
       {
         path: "/budget/add",
         element: <AddBudget />,
+      },
+      {
+        path: "/goal",
+        element: <Goal />,
+      },
+      {
+        path: "/goal/add",
+        element: <AddGoal/>,
       },
     ],
   },
