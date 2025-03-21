@@ -52,17 +52,26 @@ const Income = () => {
     setSearchQuery(event.target.value);
   };
 
-  useEffect(() => {
-    const filtered = income.filter((income) =>
-      income.title?.toLowerCase().includes(searchQuery.toLowerCase())
-    );
-    setFilteredIncome(filtered);
-  }, [searchQuery, income]);
+  const currentYear = new Date().getFullYear();
+  const currentMonth = new Date().getMonth();
+
+
+    useEffect(() => {
+      const filtered = income.filter((income) => {
+        const incomeDate = new Date(income.createdAt);
+        const incomeYear = incomeDate.getFullYear();
+        const incomeMonth = incomeDate.getMonth();
+  
+        return (
+          incomeYear === currentYear &&
+          incomeMonth === currentMonth &&
+          income.title?.toLowerCase().includes(searchQuery.toLowerCase())
+        );
+      });
+      setFilteredIncome(filtered);
+    }, [searchQuery, income]);
 
   const handleDelete = async (id) => {
-    console.log("Delete button clicked for Income ID:", id);
-    const token = localStorage.getItem('token');
-    console.log("Token:", token);
 
     const result = await Swal.fire({
       title: "Are you sure?",
@@ -75,9 +84,7 @@ const Income = () => {
 
     if (result.isConfirmed) {
       try {
-        await axiosClient.delete(`/income/${id}`, {
-          headers: { 'x-auth-token': token },
-        });
+        await axiosClient.delete(`/income/${id}`);
         toast.success("Income deleted successfully");
         fetchIncome();
       } catch (error) {
@@ -140,7 +147,7 @@ const Income = () => {
                   </th>
                   <td className="px-6 py-4">{item.description}</td>
                   <td className="px-6 py-4">Rs. {item.amount?.toFixed(2)}</td>
-                  <td className="px-6 py-4">{new Date(item.createdAt).toLocaleString()}</td>
+                  <td className="px-6 py-4">{new Date(item.createdAt).toLocaleDateString()}</td>
                   <td className="flex gap-4 px-6 py-4">
                     <button
                       onClick={() => handleEditModalOpenClick(item._id)}

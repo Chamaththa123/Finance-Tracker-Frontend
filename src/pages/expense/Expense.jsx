@@ -146,7 +146,7 @@ const Expense = () => {
           <thead className="bg-gray-100 text-xs font-extrabold uppercase text-gray-700">
             <tr>
               <th scope="col" className="px-6 py-3">
-                Budget Type
+                Budget Category
               </th>
               <th scope="col" className="px-6 py-3">
                 Title
