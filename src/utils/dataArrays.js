@@ -276,6 +276,13 @@ export const newNavigationItems = [
     children: "",
   },
   {
+    title: "Goal",
+    link: "goal",
+    icon: UserIcon,
+    priv_name: 0,
+    children: "",
+  },
+  {
     title: "Expense",
     link: "expense",
     icon: UserIcon,
