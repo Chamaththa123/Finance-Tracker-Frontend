@@ -1,7 +1,7 @@
 import React from "react";
 import { Card, ListItem, ListItemPrefix } from "@material-tailwind/react";
 import { Link,useLocation  } from "react-router-dom";
-import logo from "./../../assets/images/logo.png";
+import logo from "./../../assets/images/logo.jpg";
 import { newNavigationItems } from "../../utils/dataArrays";
 import { useState } from "react";
 import { useEffect } from "react";
