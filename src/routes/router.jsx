@@ -7,6 +7,8 @@ import { SignUp } from "../pages/SignUp";
 import { GuestLayout } from "../components/layouts/GuestLayout";
 import Budget from "../pages/budget/Budget";
 import AddBudget from "../pages/budget/AddBudget";
+import Income from "../pages/income/Income";
+import AddIncome from "../pages/income/AddIncome";
 import Goal from "../pages/goal/Goal";
 import AddGoal from "../pages/goal/AddGoal";
 import Expense from "../pages/expense/Expense";
@@ -31,6 +33,14 @@ const router = createBrowserRouter([
         element: <AddBudget />,
       },
       {
+        path: "/income",
+        element: <Income />,
+      },
+      {
+        path: "/income/add",
+        element: <AddIncome />,
+      },
+{
         path: "/goal",
         element: <Goal />,
       },
