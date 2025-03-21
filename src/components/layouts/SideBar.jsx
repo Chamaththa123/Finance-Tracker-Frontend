@@ -1,6 +1,6 @@
 import React from "react";
 import { Card, ListItem, ListItemPrefix } from "@material-tailwind/react";
-import { Link } from "react-router-dom";
+import { Link,useLocation  } from "react-router-dom";
 import logo from "./../../assets/images/logo.png";
 import { newNavigationItems } from "../../utils/dataArrays";
 import { useState } from "react";
@@ -11,14 +11,12 @@ import { useStateContext } from "../../contexts/NavigationContext";
 export const SideBar = ({ handleSidebar, sidebar }) => {
   const { user } = useStateContext();
   console.log(user);
+  const location = useLocation();
   const [linkchange, setLinkChange] = useState(false);
   const [currentUrl, setCurrentUrl] = useState("/dashboard");
-  const changeUrl = () => {
-    setCurrentUrl(window.location.href.split("/").pop());
-  };
   useEffect(() => {
-    changeUrl();
-  }, [linkchange]);
+    setCurrentUrl(location.pathname); // Update current URL on route change
+  }, [location.pathname]);
   return (
     <Card
       className={`fade-right-enter-active scrollbar-y-style fixed z-50 flex h-full w-[60%] transform flex-col items-start overflow-y-auto rounded-none bg-[#000000] p-2 font-inter transition duration-500 ease-in-out md:w-[16%] md:opacity-100 ${
@@ -53,8 +51,8 @@ export const SideBar = ({ handleSidebar, sidebar }) => {
             <NavItem
               icon={item.icon}
               currentUrl={currentUrl}
-              setLinkChange={setLinkChange}
-              changeUrl={changeUrl}
+              // setLinkChange={setLinkChange}
+              // changeUrl={changeUrl}
               key={itemIndex}
               title={item.title}
               link={item.link}
@@ -100,7 +98,11 @@ const NavItem = ({
       <Link to={`${link !== "#" ? link : "#"}`}>
         <ListItem
           onClick={toggleChildren}
-          className={` ${user[priv_name] === 0 ? "hidden" : ""} ${currentUrl === link ? "bg-[#25C935] text-white" : "text-white"} w-full rounded-sm text-[14px] font-bold hover:bg-[#25C935] hover:text-white focus:bg-[#25C935] focus:text-white active:bg-[#25C935]`}
+          className={` ${user[priv_name] === 0 ? "hidden" : ""}
+  ${currentUrl === link ? "bg-[#25C935] text-white" : "text-white"} 
+  w-full rounded-sm text-[14px] font-bold hover:bg-[#25C935] hover:text-white 
+  focus:bg-[#25C935] focus:text-white active:bg-[#25C935]"
+`}
         >
           <ListItemPrefix>
             <NavIcon className="h-5 w-5" />

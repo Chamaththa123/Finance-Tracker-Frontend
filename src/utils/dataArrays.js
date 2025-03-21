@@ -278,11 +278,11 @@ export const newNavigationItems = [
   {
     title: "Income",
     link: "income",
-icon: UserIcon,
+    icon: UserIcon,
     priv_name: 0,
     children: "",
   },
-    {
+  {
     title: "Goal",
     link: "goal",
     icon: UserIcon,
@@ -326,3 +326,4 @@ icon: UserIcon,
     ],
   },
 ];
+

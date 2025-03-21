@@ -23,7 +23,10 @@ const Expense = () => {
       setExpense(response.data);
       setFilteredExpense(response.data);
     } catch (error) {
-      console.error("Fetch Expense Error:", error.response?.data || error.message);
+      console.error(
+        "Fetch Expense Error:",
+        error.response?.data || error.message,
+      );
       toast.error("Failed to fetch Expenses");
     }
   };
@@ -31,6 +34,9 @@ const Expense = () => {
   useEffect(() => {
     fetchExpense();
   }, [userId]);
+
+  const currentYear = new Date().getFullYear();
+  const currentMonth = new Date().getMonth();
 
   const handleModalOpenClick = () => {
     setOpenModal(true);
@@ -53,15 +59,23 @@ const Expense = () => {
   };
 
   useEffect(() => {
-    const filtered = expense.filter((expense) =>
-      expense.title?.toLowerCase().includes(searchQuery.toLowerCase())
-    );
+    const filtered = expense.filter((expense) => {
+      const expenseDate = new Date(expense.createdAt);
+      const expenseYear = expenseDate.getFullYear();
+      const expenseMonth = expenseDate.getMonth();
+
+      return (
+        expenseYear === currentYear &&
+        expenseMonth === currentMonth &&
+        expense.title?.toLowerCase().includes(searchQuery.toLowerCase())
+      );
+    });
     setFilteredExpense(filtered);
   }, [searchQuery, expense]);
 
   const handleDelete = async (id) => {
     console.log("Delete button clicked for Expense ID:", id);
-    const token = localStorage.getItem('token');
+    const token = localStorage.getItem("token");
     console.log("Token:", token);
 
     const result = await Swal.fire({
@@ -75,19 +89,22 @@ const Expense = () => {
 
     if (result.isConfirmed) {
       try {
-        await axiosClient.delete(`/expense/${id}`, {
-          headers: { 'x-auth-token': token },
-        });
+        await axiosClient.delete(`/expense/${id}`);
         toast.success("Expense deleted successfully");
         fetchExpense();
       } catch (error) {
         console.error("Delete Error:", error.response?.data || error.message);
-        toast.error(`Failed to delete expense: ${error.response?.data.message || error.message}`);
+        toast.error(
+          `Failed to delete expense: ${error.response?.data.message || error.message}`,
+        );
       }
     }
   };
 
-  const totalExpense = expense.reduce((sum, item) => sum + (item.amount || 0), 0);
+  const totalExpense = expense.reduce(
+    (sum, item) => sum + (item.amount || 0),
+    0,
+  );
 
   return (
     <>
@@ -114,33 +131,64 @@ const Expense = () => {
           </div>
         </div>
       </div>
-      <div className="flex my-10">
+      <div className="my-10 flex">
         <div className="h-auto w-[200px] rounded-lg border-2 border-gray-300 p-4">
-          <div className="font-extrabold uppercase">Rs.{totalExpense.toFixed(2)}</div>
-          <div className="font-bold uppercase text-gray-600 text-[14px]">Total expense</div>
+          <div className="font-extrabold uppercase">
+            Rs.{totalExpense.toFixed(2)}
+          </div>
+          <div className="text-[14px] font-bold uppercase text-gray-600">
+            Total expense
+          </div>
         </div>
       </div>
       <div className="relative mt-10 overflow-x-auto">
         <table className="w-full text-left text-sm text-gray-500 dark:text-gray-400 rtl:text-right">
-          <thead className="bg-gray-100 text-xs uppercase text-gray-700 font-extrabold">
+          <thead className="bg-gray-100 text-xs font-extrabold uppercase text-gray-700">
             <tr>
-              <th scope="col" className="px-6 py-3">Title</th>
-              <th scope="col" className="px-6 py-3">Description</th>
-              <th scope="col" className="px-6 py-3">Amount</th>
-              <th scope="col" className="px-6 py-3">Date</th>
-              <th scope="col" className="px-6 py-3">Actions</th>
+              <th scope="col" className="px-6 py-3">
+                Budget Type
+              </th>
+              <th scope="col" className="px-6 py-3">
+                Title
+              </th>
+              <th scope="col" className="px-6 py-3">
+                Description
+              </th>
+              <th scope="col" className="px-6 py-3">
+                Amount
+              </th>
+              <th scope="col" className="px-6 py-3">
+                Date
+              </th>
+              <th scope="col" className="px-6 py-3">
+                Actions
+              </th>
             </tr>
           </thead>
           <tbody>
             {filteredExpense.length > 0 ? (
               filteredExpense.map((item) => (
-                <tr key={item._id} className="border-b border-gray-200 bg-white text-gray-900">
-                  <th scope="row" className="whitespace-nowrap px-6 py-4 font-medium">
+                <tr
+                  key={item._id}
+                  className="border-b border-gray-200 bg-white text-gray-900"
+                >
+                  <th
+                    scope="row"
+                    className="whitespace-nowrap px-6 py-4 font-medium"
+                  >
+                    {item.budgetName}
+                  </th>
+                  <th
+                    scope="row"
+                    className="whitespace-nowrap px-6 py-4 font-medium"
+                  >
                     {item.title}
                   </th>
                   <td className="px-6 py-4">{item.description}</td>
                   <td className="px-6 py-4">Rs. {item.amount?.toFixed(2)}</td>
-                  <td className="px-6 py-4">{new Date(item.createdAt).toLocaleString()}</td>
+                  <td className="px-6 py-4">
+                    {new Date(item.createdAt).toLocaleDateString()}
+                  </td>
                   <td className="flex gap-4 px-6 py-4">
                     <button
                       onClick={() => handleEditModalOpenClick(item._id)}

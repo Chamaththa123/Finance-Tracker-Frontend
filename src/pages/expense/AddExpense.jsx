@@ -9,10 +9,12 @@ import "react-toastify/dist/ReactToastify.css";
 const AddExpense = ({ isOpen, onClose, fetchExpense }) => {
   const { user } = useStateContext();
   const userId = user.id;
+  const [budget, setBudget] = useState([]);
   const [formData, setFormData] = useState({
     title: "",
     description: "",
     amount: "",
+    budgetId: "",
     userId: userId,
   });
   const [isListening, setIsListening] = useState({
@@ -58,6 +60,19 @@ const AddExpense = ({ isOpen, onClose, fetchExpense }) => {
     }
   };
 
+  const fetchBudget = async () => {
+    try {
+      const response = await axiosClient.get(`/budget/user/${userId}`);
+      setBudget(response.data);
+    } catch (error) {
+      toast.error("Failed to fetch budgets");
+    }
+  };
+
+  useEffect(() => {
+    fetchBudget();
+  }, [userId]);
+
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData((prev) => ({
@@ -73,29 +88,33 @@ const AddExpense = ({ isOpen, onClose, fetchExpense }) => {
   const handleSubmit = async () => {
     const newErrors = {};
 
-    if (!formData.title.trim()) {
+    if (!formData.title) {
       newErrors.title = "Expense Title is required";
     }
-    if (!formData.description.trim()) {
+    if (!formData.description) {
       newErrors.description = "Description is required";
     }
-    if (!formData.amount.trim()) {
+    if (!formData.amount) {
       newErrors.amount = "Amount is required";
     } else if (isNaN(formData.amount) || Number(formData.amount) <= 0) {
       newErrors.amount = "Enter a valid amount";
     }
-
+    if (!formData.budgetId) newErrors.budgetId = "Please select a budget";
     if (Object.keys(newErrors).length > 0) {
       setErrors(newErrors);
       return;
     }
 
     try {
-      await axiosClient.post("/expense", formData, {
-        headers: { 'x-auth-token': localStorage.getItem('token') },
-      });
+      await axiosClient.post("/expense", formData);
       toast.success("Expense added successfully!");
-      setFormData({ title: "", description: "", amount: "", userId: userId });
+      setFormData({
+        title: "",
+        description: "",
+        amount: "",
+        userId: userId,
+        budgetId: "",
+      });
       fetchExpense();
       handleClose();
     } catch (error) {
@@ -105,7 +124,13 @@ const AddExpense = ({ isOpen, onClose, fetchExpense }) => {
   };
 
   const handleClose = () => {
-    setFormData({ title: "", description: "", amount: "", userId: userId });
+    setFormData({
+      title: "",
+      description: "",
+      amount: "",
+      budgetId: "",
+      userId: userId,
+    });
     setErrors({});
     onClose();
   };
@@ -131,6 +156,28 @@ const AddExpense = ({ isOpen, onClose, fetchExpense }) => {
       </DialogHeader>
       <DialogBody className="p-5">
         <div className="flex flex-col p-4 text-gray-800">
+          <div className="mb-4">
+            <label className="mb-1 block text-[15px] font-semibold">
+              Select Budget:
+            </label>
+            <select
+              name="budgetId"
+              value={formData.budgetId}
+              onChange={handleChange}
+              className="w-[80%] rounded border p-2"
+            >
+              <option value="">-- Select Budget --</option>
+              {budget.map((b) => (
+                <option key={b._id} value={b._id}>
+                  {b.budgetName}
+                </option>
+              ))}
+              <option value="0">Other</option>
+            </select>
+            {errors.budgetId && (
+              <p className="text-sm text-red-500">{errors.budgetId}</p>
+            )}
+          </div>
           <div className="mb-4">
             <label className="mb-1 block text-[15px] font-semibold">
               Expense Title:

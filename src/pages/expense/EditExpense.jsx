@@ -4,25 +4,29 @@ import { Dialog, DialogHeader, DialogBody } from "@material-tailwind/react";
 import axiosClient from "../../../axios-client";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { useStateContext } from "../../contexts/NavigationContext";
 
 const EditExpense = ({ isOpen, onClose, fetchExpense, selectedExpenseId }) => {
+  const { user } = useStateContext();
   const [editedExpense, setEditedExpense] = useState({
     title: "",
     description: "",
+    budgetId: "",
     amount: "",
   });
+  const userId = user.id;
   const [isListening, setIsListening] = useState({
     title: false,
     description: false,
     amount: false,
   });
   const [errors, setErrors] = useState({});
+  const [budget, setBudget] = useState([]);
   const recognitionRef = useRef(null);
   const activeFieldRef = useRef(null);
 
   useEffect(() => {
     if (selectedExpenseId && isOpen) {
-      console.log("Fetching expense for ID:", selectedExpenseId);
       axiosClient
         .get(`/expense/${selectedExpenseId}`)
         .then((res) => {
@@ -31,10 +35,14 @@ const EditExpense = ({ isOpen, onClose, fetchExpense, selectedExpenseId }) => {
             title: res.data.title || "",
             description: res.data.description || "",
             amount: res.data.amount || "",
+            budgetId: res.data.budgetId || "",
           });
         })
         .catch((err) => {
-          console.error("Fetch Expense Error:", err.response?.data || err.message);
+          console.error(
+            "Fetch Expense Error:",
+            err.response?.data || err.message,
+          );
           toast.error("Failed to load expense details");
         });
     }
@@ -74,8 +82,22 @@ const EditExpense = ({ isOpen, onClose, fetchExpense, selectedExpenseId }) => {
     }
   };
 
+  const fetchBudget = async () => {
+    try {
+      const response = await axiosClient.get(`/budget/user/${userId}`);
+      setBudget(response.data);
+    } catch (error) {
+      toast.error("Failed to fetch budgets");
+    }
+  };
+
+  useEffect(() => {
+    fetchBudget();
+  }, [userId]);
+
   const handleChange = (e) => {
     const { name, value } = e.target;
+    console.log(`Field: ${name}, Value: ${value}`);
     setEditedExpense((prev) => ({
       ...prev,
       [name]: value,
@@ -90,11 +112,16 @@ const EditExpense = ({ isOpen, onClose, fetchExpense, selectedExpenseId }) => {
     console.log("Update button clicked for Expense ID:", selectedExpenseId);
     const newErrors = {};
 
-    if (!editedExpense.title.trim()) newErrors.title = "Expense Title is required";
-    if (!editedExpense.description.trim()) newErrors.description = "Description is required";
-    if (!editedExpense.amount.trim()) {
+    if (!editedExpense.title) newErrors.title = "Expense Title is required";
+    if (!editedExpense.description)
+      newErrors.description = "Description is required";
+    if (!editedExpense.budgetId) newErrors.budgetId = "Please select a budget";
+    if (!editedExpense.amount) {
       newErrors.amount = "Amount is required";
-    } else if (isNaN(editedExpense.amount) || Number(editedExpense.amount) <= 0) {
+    } else if (
+      isNaN(editedExpense.amount) ||
+      Number(editedExpense.amount) <= 0
+    ) {
       newErrors.amount = "Enter a valid amount";
     }
 
@@ -104,17 +131,17 @@ const EditExpense = ({ isOpen, onClose, fetchExpense, selectedExpenseId }) => {
     }
 
     try {
-      const token = localStorage.getItem('token');
+      const token = localStorage.getItem("token");
       console.log("Token for PUT:", token);
-      await axiosClient.put(`/expense/${selectedExpenseId}`, editedExpense, {
-        headers: { 'x-auth-token': token },
-      });
+      await axiosClient.put(`/expense/${selectedExpenseId}`, editedExpense);
       toast.success("Expense updated successfully");
       fetchExpense();
       handleClose();
     } catch (error) {
       console.error("Update Error:", error.response?.data || error.message);
-      toast.error(`Failed to update expense: ${error.response?.data.message || error.message}`);
+      toast.error(
+        `Failed to update expense: ${error.response?.data.message || error.message}`,
+      );
     }
   };
 
@@ -145,6 +172,29 @@ const EditExpense = ({ isOpen, onClose, fetchExpense, selectedExpenseId }) => {
       </DialogHeader>
       <DialogBody className="p-5">
         <div className="flex flex-col p-4 text-gray-800">
+          <div className="mb-4">
+            <label className="mb-1 block text-[15px] font-semibold">
+              Select Budget:
+            </label>
+            <select
+              name="budgetId"
+              value={editedExpense.budgetId}
+              onChange={handleChange}
+              className="w-[80%] rounded border p-2"
+            >
+              <option value="">-- Select Budget --</option>
+              {budget.map((b) => (
+                <option key={b._id} value={b._id}>
+                  {b.budgetName}
+                </option>
+              ))}
+              <option value="0">Other</option>
+            </select>
+
+            {errors.budgetId && (
+              <p className="text-sm text-red-500">{errors.budgetId}</p>
+            )}
+          </div>
           <div className="mb-4">
             <label className="mb-1 block text-[15px] font-semibold">
               Expense Title:

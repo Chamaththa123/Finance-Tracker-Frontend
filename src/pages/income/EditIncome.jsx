@@ -90,9 +90,9 @@ const EditIncome = ({ isOpen, onClose, fetchIncome, selectedIncomeId }) => {
     console.log("Update button clicked for Income ID:", selectedIncomeId);
     const newErrors = {};
 
-    if (!editedIncome.title.trim()) newErrors.title = "Income Title is required";
-    if (!editedIncome.description.trim()) newErrors.description = "Description is required";
-    if (!editedIncome.amount.trim()) {
+    if (!editedIncome.title) newErrors.title = "Income Title is required";
+    if (!editedIncome.description) newErrors.description = "Description is required";
+    if (!editedIncome.amount) {
       newErrors.amount = "Amount is required";
     } else if (isNaN(editedIncome.amount) || Number(editedIncome.amount) <= 0) {
       newErrors.amount = "Enter a valid amount";
