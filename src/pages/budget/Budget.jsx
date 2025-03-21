@@ -82,6 +82,8 @@ const Budget = () => {
   };
 
   const totalBudget = budget.reduce((sum, item) => sum + item.price, 0);
+  const totalUsedAmount = budget.reduce((sum, item) => sum + item.usedAmount, 0);
+const totalRemainingAmount = budget.reduce((sum, item) => sum + (item.price - item.usedAmount), 0);
 
 
   return (
@@ -109,15 +111,36 @@ const Budget = () => {
           </div>
         </div>
       </div>
-      <div className="flex my-10">
+      <div className="my-10 flex gap-10">
         <div className="h-auto w-[200px] rounded-lg border-2 border-gray-300 p-4">
-          <div className="font-extrabold uppercase">Rs.{totalBudget.toFixed(2)}</div>
-          <div className="font-bold uppercase text-gray-600 text-[14px]">Total Budget</div>
+          <div className="font-extrabold uppercase">
+            Rs.{totalBudget.toFixed(2)}
+          </div>
+          <div className="text-[14px] font-bold uppercase text-gray-600">
+            Total Budget
+          </div>
+        </div>
+
+        <div className="h-auto w-[200px] rounded-lg border-2 border-gray-300 p-4">
+          <div className="font-extrabold uppercase">
+            Rs.{totalUsedAmount.toFixed(2)}
+          </div>
+          <div className="text-[14px] font-bold uppercase text-gray-600">
+            Total USED
+          </div>
+        </div>
+        <div className="h-auto w-[200px] rounded-lg border-2 border-gray-300 p-4">
+          <div className="font-extrabold uppercase">
+            Rs.{totalRemainingAmount.toFixed(2)}
+          </div>
+          <div className="text-[14px] font-bold uppercase text-gray-600">
+            Total LEFT
+          </div>
         </div>
       </div>
       <div className="relative mt-10 overflow-x-auto">
         <table className="w-full text-left text-sm text-gray-500 dark:text-gray-400 rtl:text-right">
-          <thead className="bg-gray-100 text-xs uppercase text-gray-700 font-extrabold">
+          <thead className="bg-gray-100 text-xs font-extrabold uppercase text-gray-700">
             <tr>
               <th scope="col" className="px-6 py-3">
                 Name
@@ -138,38 +161,51 @@ const Budget = () => {
           </thead>
           <tbody>
             {filteredBudget.length > 0 ? (
-              filteredBudget.map((item) => (
-                <tr
-                  key={item._id}
-                  className="border-b border-gray-200 bg-white text-gray-900"
-                >
-                  <th
-                    scope="row"
-                    className="whitespace-nowrap px-6 py-4 font-medium"
+              filteredBudget.map((item) => {
+                const usedPercentage = (item.usedAmount / item.price) * 100;
+
+                return (
+                  <tr
+                    key={item._id}
+                    className="border-b border-gray-200 bg-white text-gray-900"
                   >
-                    {item.budgetName}
-                  </th>
-                  <td className="px-6 py-4">Rs. {item.price.toFixed(2)}</td>
-                  <td className="px-6 py-4">{item.usedAmount || 0}</td>
-                  <td className="px-6 py-4">
-                    {item.price - (item.usedAmount || 0)}
-                  </td>
-                  <td className="flex gap-4 px-6 py-4">
-                    <button
-                      onClick={() => handleEditModalOpenClick(item._id)}
-                      className="rounded-md bg-black px-2 py-1 font-medium text-white"
+                    <th
+                      scope="row"
+                      className="whitespace-nowrap px-6 py-4 font-medium"
                     >
-                      Edit
-                    </button>
-                    <button
-                      onClick={() => handleDelete(item._id)}
-                      className="rounded-md bg-red-600 px-2 py-1 font-medium text-white"
-                    >
-                      Delete
-                    </button>
-                  </td>
-                </tr>
-              ))
+                      {item.budgetName}
+                    </th>
+                    <td className="px-6 py-4">Rs. {item.price.toFixed(2)}</td>
+                    <td className="px-6 py-4">
+  Rs. {item.usedAmount.toFixed(2)}
+  <div className="w-full bg-gray-200 rounded-full h-2.5 mb-4 ">
+    <div 
+      className={`h-2.5 rounded-full ${usedPercentage > 100 ? 'bg-red-600' : 'bg-[#25C935]'}`} 
+      style={{ width: `${Math.min(usedPercentage, 100)}%` }}
+    ></div>
+  </div>
+</td>
+
+                    <td className="px-6 py-4 font-bold text-[#25C935]">
+                      Rs. {(item.price - item.usedAmount).toFixed(2)}
+                    </td>
+                    <td className="flex gap-4 px-6 py-4">
+                      <button
+                        onClick={() => handleEditModalOpenClick(item._id)}
+                        className="rounded-md bg-black px-2 py-1 font-medium text-white"
+                      >
+                        Edit
+                      </button>
+                      <button
+                        onClick={() => handleDelete(item._id)}
+                        className="rounded-md bg-red-600 px-2 py-1 font-medium text-white"
+                      >
+                        Delete
+                      </button>
+                    </td>
+                  </tr>
+                );
+              })
             ) : (
               <tr>
                 <td colSpan="5" className="px-6 py-4 text-center">
