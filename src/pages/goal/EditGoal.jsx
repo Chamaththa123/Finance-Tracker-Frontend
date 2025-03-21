@@ -90,9 +90,9 @@ const EditGoal = ({ isOpen, onClose, fetchGoal, selectedGoalId }) => {
     console.log("Update button clicked for Goal ID:", selectedGoalId);
     const newErrors = {};
 
-    if (!editedGoal.title.trim()) newErrors.title = "Goal Title is required";
-    if (!editedGoal.description.trim()) newErrors.description = "Description is required";
-    if (!editedGoal.amount.trim()) {
+    if (!editedGoal.title) newErrors.title = "Goal Title is required";
+    if (!editedGoal.description) newErrors.description = "Description is required";
+    if (!editedGoal.amount) {
       newErrors.amount = "Amount is required";
     } else if (isNaN(editedGoal.amount) || Number(editedGoal.amount) <= 0) {
       newErrors.amount = "Enter a valid amount";

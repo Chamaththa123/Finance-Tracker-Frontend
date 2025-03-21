@@ -73,13 +73,13 @@ const AddGoal = ({ isOpen, onClose, fetchGoal }) => {
   const handleSubmit = async () => {
     const newErrors = {};
 
-    if (!formData.title.trim()) {
+    if (!formData.title) {
       newErrors.title = "Goal Title is required";
     }
-    if (!formData.description.trim()) {
+    if (!formData.description) {
       newErrors.description = "Description is required";
     }
-    if (!formData.amount.trim()) {
+    if (!formData.amount) {
       newErrors.amount = "Amount is required";
     } else if (isNaN(formData.amount) || Number(formData.amount) <= 0) {
       newErrors.amount = "Enter a valid amount";

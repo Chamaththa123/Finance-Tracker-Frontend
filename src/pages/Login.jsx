@@ -8,7 +8,6 @@ import {
   Input,
   Button,
 } from "@material-tailwind/react";
-import logo from "../assets/images/logo-black.png";
 import { Link } from "react-router-dom";
 import axiosClient from "../../axios-client";
 import { useStateContext } from "../contexts/NavigationContext";

@@ -78,11 +78,11 @@ const EditBudget = ({ isOpen, onClose, fetchBudget, selectedBudgetId }) => {
   const handleSubmit = async () => {
     const newErrors = {};
 
-    if (!editedBudget.budgetName.trim()) {
+    if (!editedBudget.budgetName) {
       newErrors.budgetName = "Budget Name is required";
     }
 
-    if (!editedBudget.price.trim()) {
+    if (!editedBudget.price) {
       newErrors.price = "Price is required";
     } else if (isNaN(editedBudget.price) || Number(editedBudget.price) <= 0) {
       newErrors.price = "Enter a valid price";

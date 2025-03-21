@@ -71,11 +71,11 @@ const AddBudget = ({ isOpen, onClose, fetchBudget }) => {
   const handleSubmit = async () => {
     const newErrors = {};
 
-    if (!formData.budgetName.trim()) {
+    if (!formData.budgetName) {
       newErrors.budgetName = "Budget Name is required";
     }
 
-    if (!formData.price.trim()) {
+    if (!formData.price) {
       newErrors.price = "Price is required";
     } else if (isNaN(formData.price) || Number(formData.price) <= 0) {
       newErrors.price = "Enter a valid price";
