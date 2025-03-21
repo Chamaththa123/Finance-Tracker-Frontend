@@ -9,7 +9,10 @@ import Budget from "../pages/budget/Budget";
 import AddBudget from "../pages/budget/AddBudget";
 import Income from "../pages/income/Income";
 import AddIncome from "../pages/income/AddIncome";
-
+import Goal from "../pages/goal/Goal";
+import AddGoal from "../pages/goal/AddGoal";
+import Expense from "../pages/expense/Expense";
+import AddExpense from "../pages/expense/AddExpense";
 
 
 const router = createBrowserRouter([
@@ -37,14 +40,22 @@ const router = createBrowserRouter([
         path: "/income/add",
         element: <AddIncome />,
       },
-      // {
-      //   path: "/expense",
-      //   element: <Expense />,
-      // },
-      // {
-      //   path: "/expense/add",
-      //   element: <AddExpense />,
-      // },
+{
+        path: "/goal",
+        element: <Goal />,
+      },
+      {
+        path: "/goal/add",
+        element: <AddGoal/>,
+},
+      {
+        path: "/expense",
+        element: <Expense />,
+      },
+      {
+        path: "/expense/add",
+        element: <AddExpense />,
+      },
     ],
   },
   {
