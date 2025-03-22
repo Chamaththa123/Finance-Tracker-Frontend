@@ -91,13 +91,13 @@ export const MainLayout = () => {
           </div>
           <div>
             <div className="flex items-center justify-between">
-              <Tooltip content="View Notifications">
+              {/* <Tooltip content="View Notifications">
                 <Link to="/notifications">
                   <IconButton variant="text" className="mx-2 bg-gray-500">
                     <BellIcon className="h-4 w-4 text-white" />
                   </IconButton>
                 </Link>
-              </Tooltip>
+              </Tooltip> */}
               <div className="relative" ref={dropdownRef}>
                 <IconButton
                   variant="text"
