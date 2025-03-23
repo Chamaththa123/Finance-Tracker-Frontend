@@ -106,7 +106,7 @@ const BudgetVsExpense = ({
             Budget Usage
           </h3>
         </div>
-        <div className="flex items-start border-t px-6 pt-4">
+        <div className="flex items-start  px-6 pt-4">
           <Chart
             options={chartConfig.options}
             series={chartConfig.series}
