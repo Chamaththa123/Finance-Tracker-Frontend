@@ -1,22 +1,59 @@
 import React from "react";
 import { Card, ListItem, ListItemPrefix } from "@material-tailwind/react";
-import { Link,useLocation  } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import logo from "./../../assets/images/logo.jpg";
-import { newNavigationItems } from "../../utils/dataArrays";
 import { useState } from "react";
 import { useEffect } from "react";
 import { ArrowDown, ArrowRight, UserProfileIcon } from "../../utils/icons";
 import { useStateContext } from "../../contexts/NavigationContext";
+import { ChartBarIcon } from "@heroicons/react/24/outline";
+
+import {
+  GoalIcon,
+  MoneyIcon,
+  ExpensiveIcon,
+  BudgetIcon,
+} from "../../utils/icons";
+
+const newNavigationItems = [
+  {
+    title: "Dashboard",
+    link: "/",
+    icon: ChartBarIcon,
+  },
+  {
+    title: "Budget",
+    link: "/budget",
+    icon: BudgetIcon,
+  },
+  {
+    title: "Income",
+    link: "/income",
+    icon: MoneyIcon,
+  },
+  {
+    title: "Expense",
+    link: "/expense",
+    icon: ExpensiveIcon,
+  },
+  {
+    title: "Goal",
+    link: "/goal",
+    icon: GoalIcon,
+  },
+];
 
 export const SideBar = ({ handleSidebar, sidebar }) => {
   const { user } = useStateContext();
   console.log(user);
   const location = useLocation();
   const [linkchange, setLinkChange] = useState(false);
-  const [currentUrl, setCurrentUrl] = useState("/dashboard");
+  const [currentUrl, setCurrentUrl] = useState(location.pathname);
+
   useEffect(() => {
-    setCurrentUrl(location.pathname); // Update current URL on route change
+    setCurrentUrl(location.pathname);
   }, [location.pathname]);
+  
   return (
     <Card
       className={`fade-right-enter-active scrollbar-y-style fixed z-50 flex h-full w-[60%] transform flex-col items-start overflow-y-auto rounded-none bg-[#000000] p-2 font-inter transition duration-500 ease-in-out md:w-[16%] md:opacity-100 ${
@@ -47,19 +84,27 @@ export const SideBar = ({ handleSidebar, sidebar }) => {
       </div>
       <li className="w-full list-none">
         {newNavigationItems.map((item, itemIndex) => {
+          let NavIcon = item.icon;
           return (
-            <NavItem
-              icon={item.icon}
-              currentUrl={currentUrl}
-              // setLinkChange={setLinkChange}
-              // changeUrl={changeUrl}
-              key={itemIndex}
-              title={item.title}
-              link={item.link}
-              priv_name={item.priv_name}
-              children={item.children}
-              handleSidebar={handleSidebar}
-            />
+            <Link to={`${item.link !== "#" ? item.link : "#"}`}>
+              <ListItem
+  className={`w-full rounded-sm text-[14px] font-bold 
+    ${
+      currentUrl === item.link 
+        ? "bg-[#25C935] text-white" 
+        : "text-white"
+    } 
+    hover:bg-[#25C935] hover:text-white focus:bg-[#25C935] focus:text-white`}
+>
+
+                <ListItemPrefix>
+                  <NavIcon className="h-5 w-5" />
+                </ListItemPrefix>
+                <span className="mr-2 flex-1 text-[14px] font-normal">
+                  {item.title}
+                </span>
+              </ListItem>
+            </Link>
           );
         })}
       </li>
@@ -70,73 +115,5 @@ export const SideBar = ({ handleSidebar, sidebar }) => {
         </div>
       </div>
     </Card>
-  );
-};
-
-const NavItem = ({
-  icon,
-  title,
-  link,
-  priv_name,
-  children,
-  currentUrl,
-  setLinkChange,
-  handleSidebar,
-}) => {
-  const { user } = useStateContext();
-  const [openChildren, setOpenChildren] = useState(false);
-
-  const toggleChildren = () => {
-    setOpenChildren(!openChildren);
-    if (children === 0) handleSidebar();
-  };
-
-  const NavIcon = icon;
-
-  return (
-    <div className="w-full">
-      <Link to={`${link !== "#" ? link : "#"}`}>
-        <ListItem
-          onClick={toggleChildren}
-          className={` ${user[priv_name] === 0 ? "hidden" : ""}
-  ${currentUrl === link ? "bg-[#25C935] text-white" : "text-white"} 
-  w-full rounded-sm text-[14px] font-bold hover:bg-[#25C935] hover:text-white 
-  focus:bg-[#25C935] focus:text-white active:bg-[#25C935]"
-`}
-        >
-          <ListItemPrefix>
-            <NavIcon className="h-5 w-5" />
-          </ListItemPrefix>
-          <span className="mr-2 flex-1 text-[14px] font-normal">{title}</span>
-          {children && children.length > 0 && (
-            <span>
-              {openChildren ? (
-                <ArrowDown className="h-[10px] w-[10px]" />
-              ) : (
-                <ArrowRight className="h-[10px] w-[10px]" />
-              )}
-            </span>
-          )}
-        </ListItem>
-      </Link>
-
-      {openChildren && Array.isArray(children) && children.length > 0 && (
-        <ul className="ml-4 border-l-2 border-[#10806f]">
-          {children.map((child, index) => (
-            <NavItem
-              key={index}
-              icon={child.icon}
-              title={child.title}
-              link={child.link}
-              priv_name={child.priv_name}
-              children={child.children}
-              currentUrl={currentUrl}
-              setLinkChange={setLinkChange}
-              handleSidebar={handleSidebar}
-            />
-          ))}
-        </ul>
-      )}
-    </div>
   );
 };
