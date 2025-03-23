@@ -45,9 +45,7 @@ const newNavigationItems = [
 
 export const SideBar = ({ handleSidebar, sidebar }) => {
   const { user } = useStateContext();
-  console.log(user);
   const location = useLocation();
-  const [linkchange, setLinkChange] = useState(false);
   const [currentUrl, setCurrentUrl] = useState(location.pathname);
 
   useEffect(() => {
