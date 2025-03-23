@@ -8,7 +8,7 @@ const Summary = ({ data }) => {
           Current Total Saving
         </div>
         <div className="pt-1 text-[20px] font-extrabold uppercase text-white">
-          Rs.{parseFloat(data.totalSaving).toFixed(2)}
+        Rs.{data.totalSaving ? parseFloat(data.totalSaving).toFixed(2) : "0.00"}
         </div>
       </div>
 
@@ -17,7 +17,11 @@ const Summary = ({ data }) => {
           month Saving
         </div>
         <div className="pt-1 text-[20px] font-extrabold uppercase text-black">
-        Rs.{(parseFloat(data.totalIncome) - parseFloat(data.totalExpense)).toFixed(2)}
+          
+        Rs.{(
+  (parseFloat(data.totalIncome) || 0) - (parseFloat(data.totalExpense) || 0)
+).toFixed(2)}
+
         </div>
       </div>
 
@@ -26,7 +30,8 @@ const Summary = ({ data }) => {
           month total income
         </div>
         <div className="pt-1 text-[20px] font-extrabold uppercase text-black">
-          Rs.{parseFloat(data.totalIncome).toFixed(2)}
+        Rs.{(parseFloat(data.totalIncome) || 0).toFixed(2)}
+
         </div>
       </div>
 
@@ -35,7 +40,8 @@ const Summary = ({ data }) => {
           month total expense
         </div>
         <div className="pt-1 text-[20px] font-extrabold uppercase text-black">
-          Rs.{parseFloat(data.totalExpense).toFixed(2)}
+          Rs.{(parseFloat(data.totalExpense) || 0).toFixed(2)}
+
         </div>
       </div>
     </div>
