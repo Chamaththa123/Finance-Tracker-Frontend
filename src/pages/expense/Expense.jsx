@@ -107,7 +107,7 @@ const Expense = () => {
   );
 
   return (
-    <>
+    <div className="bg-white p-5">
       <div className="flex justify-between">
         <div className="text-[18px] font-semibold">Expense</div>
         <div className="flex gap-4">
@@ -230,7 +230,7 @@ const Expense = () => {
         />
       )}
       <ToastContainer />
-    </>
+    </div>
   );
 };
 

@@ -87,8 +87,8 @@ const totalRemainingAmount = budget.reduce((sum, item) => sum + (item.price - it
 
 
   return (
-    <>
-      <div className="flex justify-between">
+    <div className="bg-white p-5">
+      <div className="flex justify-between bg-white">
         <div className="text-[18px] font-semibold">Budget</div>
         <div className="flex gap-4">
           <div>
@@ -229,7 +229,7 @@ const totalRemainingAmount = budget.reduce((sum, item) => sum + (item.price - it
         selectedBudgetId={selectedBudgetId}
       />
       <ToastContainer />
-    </>
+    </div>
   );
 };
 

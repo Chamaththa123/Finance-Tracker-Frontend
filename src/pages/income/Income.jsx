@@ -97,7 +97,7 @@ const Income = () => {
   const totalIncome = income.reduce((sum, item) => sum + (item.amount || 0), 0);
 
   return (
-    <>
+    <div className="bg-white p-5">
       <div className="flex justify-between">
         <div className="text-[18px] font-semibold">Income</div>
         <div className="flex gap-4">
@@ -189,7 +189,7 @@ const Income = () => {
         />
       )}
       <ToastContainer />
-    </>
+    </div>
   );
 };
 

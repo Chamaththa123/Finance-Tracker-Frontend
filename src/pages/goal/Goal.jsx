@@ -126,7 +126,7 @@ const Goal = () => {
   const totalGoal = goal.reduce((sum, item) => sum + (item.amount || 0), 0);
 
   return (
-    <>
+    <div className="bg-white p-5">
       <div className="flex justify-between">
         <div className="text-[18px] font-semibold">Goal</div>
         <div className="flex gap-4">
@@ -280,7 +280,7 @@ const Goal = () => {
         />
       )}
       <ToastContainer />
-    </>
+    </div>
   );
 };
 
