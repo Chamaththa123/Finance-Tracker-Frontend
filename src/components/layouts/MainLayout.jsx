@@ -76,7 +76,7 @@ export const MainLayout = () => {
         <SideBar handleSidebar={handleSidebar} sidebar={sidebar} />
       </div>
 
-      <section className="flex w-[100%] flex-col gap-5 md:ml-[15%] md:w-[85%]">
+      <section className="flex w-[100%] flex-col gap-5 md:ml-[15%] md:w-[85%] min-h-screen bg-gray-200">
         <Card className="flex h-16 w-full flex-row items-center justify-between rounded-none bg-white p-3 pl-3">
           <div>
             <div ref={sideBarButtondownRef} className="flex md:hidden">

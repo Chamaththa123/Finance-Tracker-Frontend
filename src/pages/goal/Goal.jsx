@@ -110,7 +110,7 @@ const Goal = () => {
 
     if (result.isConfirmed) {
       try {
-        await axiosClient.put(`/goal/${id}`);
+        await axiosClient.post(`/goal/goal-completed/${id}`);
         toast.success("Congratulations !!! Goal is completed successfully");
         fetchGoal();
         fetchWallet();
@@ -153,7 +153,7 @@ const Goal = () => {
       <div className="my-10 flex gap-10">
         <div className="h-auto w-[200px] rounded-lg border-2 border-gray-300 p-4">
           <div className="font-extrabold uppercase">
-            Rs. {Number(wallet.totalSaving).toFixed(2)}
+            Rs. {wallet?.totalSaving ? Number(wallet?.totalSaving).toFixed(2) :"0.00"}
           </div>
           <div className="text-[14px] font-bold uppercase text-gray-600">
             Total savings
@@ -243,12 +243,12 @@ const Goal = () => {
                       </button>
                       {percentage == 100 && (
                         <>
-                          {/* <button
+                          <button
                             onClick={() => handleComplete(item._id)}
                             className="rounded-md bg-[#25C935] px-2 py-1 font-medium text-white"
                           >
                             Complete
-                          </button> */}
+                          </button>
                         </>
                       )}
                     </td>
