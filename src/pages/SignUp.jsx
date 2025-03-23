@@ -7,6 +7,7 @@ import {
   Input,
   Button,
 } from "@material-tailwind/react";
+import { useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
 import axiosClient from "../../axios-client";
 
@@ -37,6 +38,8 @@ export const SignUp = () => {
     }));
   };
 
+  const navigate = useNavigate();
+
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -57,10 +60,10 @@ export const SignUp = () => {
       const response = await axiosClient.post("/auth/register", formData);
       if (response.status === 201) {
         Swal.fire({
-          title: "Success!",
           text: "User registered successfully",
           icon: "success",
-          confirmButtonColor: "#179113",
+        }).then(() => {
+          navigate("/login");
         });
 
         setFormData({
@@ -68,12 +71,12 @@ export const SignUp = () => {
           email: "",
           password: "",
         });
+        
       } else {
         Swal.fire({
           title: "Error",
           text: "Registration failed",
-          icon: "error",
-          confirmButtonColor: "#d33",
+          icon: "error"
         });
       }
     } catch (error) {
@@ -81,7 +84,6 @@ export const SignUp = () => {
         title: "Error",
         text: "Error registering user",
         icon: "error",
-        confirmButtonColor: "#d33",
       });
     }
   };
