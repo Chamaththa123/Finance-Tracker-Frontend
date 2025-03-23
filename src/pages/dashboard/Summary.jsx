@@ -1,9 +1,11 @@
 import React from "react";
+import { ExpenseIcon, IncomeIcon, SavingIcon, WalletIcon } from "../../utils/icons";
 
 const Summary = ({ data }) => {
   return (
     <div className="flex gap-10">
       <div className="h-auto w-1/4 border-2 border-black bg-[black] p-4">
+      <div className="px-2 py-1  bg-green-800  w-[45px] rounded-full mb-4"><WalletIcon/></div>
         <div className="text-[13px] font-bold uppercase text-gray-300">
           Current Total Saving
         </div>
@@ -13,6 +15,7 @@ const Summary = ({ data }) => {
       </div>
 
       <div className="h-auto w-1/4 border-2 border-white bg-white p-4">
+      <div className="px-2 py-1  bg-gray-200  w-[45px] rounded-full mb-4"><SavingIcon/></div>
         <div className="text-[13px] font-bold uppercase text-gray-700">
           month Saving
         </div>
@@ -26,6 +29,7 @@ const Summary = ({ data }) => {
       </div>
 
       <div className="h-auto w-1/4 border-2 border-white bg-white p-4">
+      <div className="px-2 py-1  bg-gray-200  w-[45px] rounded-full mb-4"><IncomeIcon/></div>
         <div className="text-[13px] font-bold uppercase text-gray-700">
           month total income
         </div>
@@ -36,6 +40,7 @@ const Summary = ({ data }) => {
       </div>
 
       <div className="h-auto w-1/4 border-2 border-white bg-white p-4">
+      <div className="px-2 py-1  bg-gray-200  w-[45px] rounded-full mb-4"><ExpenseIcon/></div>
         <div className="text-[13px] font-bold uppercase text-gray-700">
           month total expense
         </div>
