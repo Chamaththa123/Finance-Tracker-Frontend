@@ -302,7 +302,7 @@ const EditExpense = ({ isOpen, onClose, fetchExpense, selectedExpenseId }) => {
           </div>
           <button
             onClick={handleSubmit}
-            className="mt-4 w-[130px] rounded-md bg-[#25C935] px-4 py-[6px] text-[15px] font-semibold text-white"
+            className="mt-4 w-[150px] rounded-md bg-[#25C935] px-4 py-[6px] text-[15px] font-semibold text-white"
           >
             Update Expense
           </button>
